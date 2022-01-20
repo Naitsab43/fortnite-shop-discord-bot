@@ -4,7 +4,7 @@ from discord.ext import commands
 from datetime import date, datetime
 from concat_images import create_image_store
 
-TOKEN = "ODU1OTc0MTgwODEyODgxOTIw.YM6SEw.FT-HB8FHSS6KcJ3J-sLENR2raUg"
+TOKEN = "*token*"
 
 client = commands.Bot(command_prefix="!")
 
