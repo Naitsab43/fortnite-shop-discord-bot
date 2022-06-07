@@ -1,0 +1,9 @@
+__pycache__
+src/assets/images/final
+src/assets/images/objects
+src/assets/images/shop
+
+# Credentials
+src/config.py
+
+.venv

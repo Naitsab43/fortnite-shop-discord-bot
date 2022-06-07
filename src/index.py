@@ -1,84 +1,58 @@
-import discord
 import os
-from discord.ext import commands
-from datetime import date, datetime
-from concat_images import create_image_store
+import discord
+from config import BOT_TOKEN
+from fortnite_bot import FortniteBot
+from fortnite_image import FortniteImage
+from utils import get_actual_date_formatted
 
-TOKEN = "*token*"
+fortnite_bot = FortniteBot(command_prefix="!")
+fortnite_image = FortniteImage()
 
-client = commands.Bot(command_prefix="!")
-
-@client.event
+@fortnite_bot.client.event
 async def on_ready():
   print("El bot esta activo")
 
-
-# Muestra los comandos
-@client.command()
+@fortnite_bot.client.command()
 async def shop(ctx):
 
-  await create_image_store();
+  is_one_image = fortnite_image.create_image_store()
 
-  day = datetime.now()
-  month = day.strftime("%B")
+  date = get_actual_date_formatted()
 
-  day = day.strftime("%A")
-
-  if day == "Monday":
-    day = "Lunes"
-  elif day == "Tuesday":
-    day = "Martes"
-  elif day == "Wednesday":
-    day = "Miércoles"
-  elif day == "Thursday":
-    day = "Jueves"
-  elif day == "Friday":
-    day = "Viernes"
-  elif day == "Saturday":
-    day = "Sábado"
-  elif day == "Sunday":
-    day = "Domingo"
-
-  if month == "January":
-    month = "Enero"
-  elif month == "February":
-    month = "Febrero"
-  elif month == "March":
-    month = "Marzo"
-  elif month == "April":
-    month = "Abril"
-  elif month == "May":
-    month = "Mayo"
-  elif month == "June":
-    month = "Junio"
-  elif month == "July":
-    month = "Julio"
-  elif month == "August":
-    month = "Agosto"
-  elif month == "September":
-    month = "Septiembre"
-  elif month == "October":
-    month = "Octubre"
-  elif month == "November":
-    month = "Noviembre"
-  elif month == "December":
-    month = "Diciembre"
+  if(is_one_image):
+    embed, file = fortnite_bot.create_embed(
+      title=f"💰 Tienda de fortnite - {date['day']} {date['day_number']} de {date['month']} del {date['year']}", 
+      color=discord.Colour.blue(), 
+      description="Fortnite shop",
+      filepath="src/assets/images/shop/shop.png",
+      image_name="shop.png"
+    )
+    await ctx.send(file=file, embed=embed)
+    os.remove("src/assets/images/shop/shop.png")
+    return
   
-  date_today = date.today()
-  day_number = date_today.day
-  year = date_today.year
+  embed, file = fortnite_bot.create_embed(
+    title=f"💰 Tienda de fortnite - {date['day']} {date['day_number']} de {date['month']} del {date['year']}", 
+    color=discord.Colour.blue(), 
+    description="Fortnite shop",
+    filepath="src/assets/images/shop/shop1.png",
+    image_name="shop1.png"
+  )
 
+  await ctx.send(file=file, embed=embed)
 
-  embed = discord.Embed(title= f"💰 Tienda de fortnite - {day} {day_number} de {month} del {year}", colour=discord.Colour.blue())
+  embed, file = fortnite_bot.create_embed(
+    title="", 
+    color=discord.Colour.blue(), 
+    description="",
+    filepath="src/assets/images/shop/shop2.png",
+    image_name="shop2.png"
+  )
 
-  filee = discord.File("src/images/shop/shop.png")
+  await ctx.send(file=file, embed=embed)
 
-  embed.description = "No me pagan lo suficiente, vayanse a la chucha"
-
-  embed.set_image(url="attachment://shop.png")
+  os.remove("src/assets/images/shop/shop1.png")
+  os.remove("src/assets/images/shop/shop2.png")
   
-  await ctx.send(file= filee, embed=embed)
-
-
 if __name__ == "__main__":
-  client.run(TOKEN)
+  fortnite_bot.run(BOT_TOKEN)
